@@ -1,19 +1,19 @@
-# Function to simulate a single realization of the competition
+# Funcion para simular una realizacion del experimento
 simulate_competencia <- function(m1, m2, v) {
-  # Define the intervals (a, b) and (c, d) based on the values of m1 and m2
+  # Defino los intervalos (a, b) y (c, d) basedo en los valores ingresados de m1 y m2
   a <- sqrt(8 * m1 + m2)
   b <- sqrt(10 * m1 + 10 * m2)
   c <- log(200 * m1 + 300 * m2)
   d <- log(400 * m1 + 600 * m2)
   
-  # Generate random samples of the bucket load and time spent filling the bucket
-  # for each student
+  # Genero valores aleatorios de la cantidad de baldes y el tiempo de demora
+  # para cada estudiante
   carga_balde_1 <- runif(1, a, b)
   carga_balde_2 <- runif(1, a, b)
   tiempo_1 <- runif(1, c, d)
   tiempo_2 <- runif(1, c, d)
   
-  # Calculate the values of n1, n2, t1, t2, w, and l for this realization of the competition
+  # Calculo los valores de n1, n2, t1, t2, w, y l 
   n1 <- v / carga_balde_1
   n2 <- v / carga_balde_2
   t1 <- n1 * tiempo_1
@@ -21,63 +21,49 @@ simulate_competencia <- function(m1, m2, v) {
   w <- if (t1 < t2) t1 else t2
   l <- if (t1 > t2) t1 else t2
   
-  # Return the values of n1, n2, t1, t2, w, and l
   return(c(n1, n2, t1, t2, w, l))
 }
 
-# Define the values of m1, m2, and v
+# Defino los valores de m1, m2 y de v
 m1 <-12
 m2 <- 12
 v <- 190.9
 
-# Create an empty data frame to store the results of the simulations
+# Creo un  data frame vacio para guardar los resultados de las simulaciones
 resultados <- data.frame(n1 = numeric(0), n2 = numeric(0), t1 = numeric(0), t2 = numeric(0), w = numeric(0), l = numeric(0))
 
-# Simulate the competition 1000 times and store the results in the data frame
+# Simulo la competencia 1000 veces y guardo los resultados en el data frame
 for (i in 1:1000) {
   resultado <- simulate_competencia(m1, m2, v)
   resultados <- rbind(resultados, resultado)
-
 }
 
-# Print the sample vectors of the variables N1, N2, T1, T2, W, and L
-print(resultados$n1)
-print(resultados$n2)
-print(resultados$t1)
-print(resultados$t2)
-print(resultados$w)
-print(resultados$l)
 
-#Funciones de probabilidad aproximadas de N1 y N2
+##A
 
-Prob_N1=mean(resultados[[1]])/1000
-Prob_N2=mean(resultados[[2]])/1000
+#Media y varianza de N1:
 
-#Media y varianza de
+plot(resultados[[1]],xlab = 'Simulaciones', ylab = 'Probabilidad N1', ylim = c(10,20), main = 'Cantidad de baldes arrojados al recipiente por el estudiante 1')
+abline(h=mean(resultados[[1]]), col='chocolate')
+Media_N1=mean(resultados[[1]])
+Varianza_N1=var(resultados[[1]])
 
+#Media y varianza de N2:
 
+plot(resultados[[2]],xlab = 'Simulaciones', ylab = 'Probabilidad N2', ylim = c(10,20), main = 'Cantidad de baldes arrojados al recipiente por el estudiante 2')
+abline(h=mean(resultados[[2]]), col='blue')
+var(resultados[[2]])
 
+##B
 
-plot(resultados[[1]],xlab = 'Simulaciones', ylab = 'Probabilidad N1', ylim = c(5,25), xlim = c(0,1000))
-abline(h=mean(resultados[[1]]))
-abline(h=var(resultados[[1]]))
+#Aproximaciones graficas de las funciones de densidad de T1, T2, W y L
 
 plot(density(resultados[[3]]), main = "Densidad de T1")
 plot(density(resultados[[4]]), main = "Densidad de T2")
 plot(density(resultados[[5]]), main = "Densidad de W")
-
 plot(density(resultados[[6]]), main = "Densidad de L")
 
-plot(resultados[[2]],xlab = 'Simulaciones', ylab = 'Probabilidad N2', ylim = c(5,25), xlim = c(0,1000))
-abline(h=mean(resultados[[2]]))
+#Media y varianza de W y L:
 
-##
-##plot(resultados[[3]],xlab = 'Simulaciones', ylab = 'Probabilidad T1')
-##abline(h=mean(resultados[[3]]))
-##plot(resultados[[4]],xlab = 'Simulaciones', ylab = 'Probabilidad T2')
-##abline(h=mean(resultados[[4]]))
-##plot(resultados[[5]],xlab = 'Simulaciones', ylab = 'Probabilidad W')
-##abline(h=mean(resultados[[5]]))
-##plot(resultados[[6]],xlab = 'Simulaciones', ylab = 'Probabilidad L')
-##abline(h=mean(resultados[[6]]))
-##
+Media_W=mean(resultados[[5]])
+Media_L=mean(resultados[[6]])
